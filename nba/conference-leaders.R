@@ -66,11 +66,11 @@ western_conference_standings <- conference_standings %>%
   ungroup()
 
 # how long on average does it take the worst team on any given season to make the playoffs
-x <- conference_standings %>% filter(year == 1991, rank == teams_in_league) %>% pull(team)
+x <- western_conference_standings %>% filter(year == 1991, rank == teams_in_conf) %>% pull(team)
 
-conference_standings %>% 
+western_conference_standings %>% 
   filter(team == x) %>% 
-  ggplot(aes(year, rank)) + geom_point()
+  ggplot(aes(year, rank)) + geom_point() + geom_hline(yintercept = 8, linetype =2)
 
 
 
