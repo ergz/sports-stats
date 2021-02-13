@@ -55,16 +55,25 @@ conference_standings <- map_df(years, function(y) {
   
 })
 
-conference_standings %>% 
-  ggplot(aes(year, points_per_game)) + geom_point()
+write_rds(conference_standings, "nba/data/conference-standings-1980-2020.rds")
+
+conference_standings <- read_rds("nba/data/conference-standings-1980-2020.rds")
+
+western_conference_standings <- conference_standings %>%
+  filter(conference == "western") %>% 
+  group_by(year) %>% 
+  mutate(rank = row_number(), teams_in_conf = n()) %>% 
+  ungroup()
+
+# how long on average does it take the worst team on any given season to make the playoffs
+x <- conference_standings %>% filter(year == 1991, rank == teams_in_league) %>% pull(team)
 
 conference_standings %>% 
-  group_by(year) %>% 
-  summarise(
-    max_win = max(win),
-    max_prop = max(win_loss_prop)
-  ) %>% 
-  ggplot(aes(year, max_prop)) + geom_point()  
+  filter(team == x) %>% 
+  ggplot(aes(year, rank)) + geom_point()
+
+
+
 
 
 
